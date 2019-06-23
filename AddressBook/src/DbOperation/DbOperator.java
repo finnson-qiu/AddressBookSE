@@ -7,7 +7,6 @@ import java.sql.*;
 
 public class DbOperator {
 
-    ErrorInterface errorInterface;
     private static String USERNAME = "scott";
     private static String PASSWORD = "tiger";
     private static String DRIVER = "oracle.jdbc.OracleDriver";
@@ -21,7 +20,6 @@ public class DbOperator {
         try{
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-           // System.out.println("成功连接数据库");
         }catch (ClassNotFoundException e){
             throw new RuntimeException("class not find !",e);
         }catch (SQLException e){
@@ -30,7 +28,7 @@ public class DbOperator {
         return  connection;
     }
 
-    private ResultSet GetResultSet(String Sno,String Snumber,String Sname,String Scity,int flag){
+    private ResultSet GetDResultSet( String Sno,String Snumber,String Sname,String Scity,int flag){
         connection = getConnection();
         String sql;
         ResultSet res = null;
@@ -59,13 +57,12 @@ public class DbOperator {
             sql = "select * from ADDRESS where SNO = ? AND SNAME = ? AND SCITY = ?";
         }
         try{
-
             pst = connection.prepareStatement(sql);
             if(flag == 1) {
-                    pst.setString(1, Scity);
+                pst.setString(1, Scity);
             }
             else if(flag == 2){
-                    pst.setString(1,Sname);
+                pst.setString(1,Sname);
             }
             else if(flag == 3){
                 pst.setString(1,Sname);
@@ -86,6 +83,69 @@ public class DbOperator {
                 pst.setString(1,Sno);
                 pst.setString(2,Sname);
                 pst.setString(3,Scity);
+            }
+            res = pst.executeQuery();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+    private ResultSet GetResultSet(String Sno,String Snumber,String Sname,String Scity,int flag){
+        connection = getConnection();
+        String sql;
+        ResultSet res = null;
+        if(flag == 0){
+            sql = "select * from ADDRESS where 1 = 1 order by SNO asc ";         //四个全为空
+        }
+        else if(flag == 1) {
+            sql = "select * from ADDRESS where SCITY LIKE ?";
+        }
+        else if(flag == 2){
+            sql = "select * from ADDRESS where SNAME LIKE ?";
+        }
+        else if(flag == 3){
+            sql = "select * from ADDRESS where SNAME LIKE ? AND SCITY LIKE ?";
+        }
+        else if(flag == 4){
+            sql = "select * from ADDRESS where SNO LIKE ?";
+        }
+        else if(flag == 5){
+            sql = "select * from ADDRESS where SNO LIKE ? AND SCITY LIKE ?";
+        }
+        else if(flag == 6){
+            sql = "select * from ADDRESS where SNO LIKE ? AND SNAME LIKE ?";
+        }
+        else{
+            sql = "select * from ADDRESS where SNO LIKE ? AND SNAME LIKE ? AND SCITY LIKE ?";
+        }
+        try{
+
+            pst = connection.prepareStatement(sql);
+            if(flag == 1) {
+                    pst.setString(1, "%"+Scity+"%");
+            }
+            else if(flag == 2){
+                    pst.setString(1,"%"+Sname+"%");
+            }
+            else if(flag == 3){
+                pst.setString(1,"%"+Sname+"%");
+                pst.setString(2,"%"+Scity+"%");
+            }
+            else if(flag == 4){
+                pst.setString(1,"%"+Sno+"%");
+            }
+            else if(flag == 5){
+                pst.setString(1,"%"+Sno+"%");
+                pst.setString(2,"%"+Scity+"%");
+            }
+            else if(flag == 6){
+                pst.setString(1,"%"+Sno+"%");
+                pst.setString(2,"%"+Sname+"%");
+            }
+            else if(flag == 7){
+                pst.setString(1,"%"+Sno+"%");
+                pst.setString(2,"%"+Sname+"%");
+                pst.setString(3,"%"+Scity+"%");
             }
             res = pst.executeQuery();
         }catch (SQLException e){
@@ -114,7 +174,7 @@ public class DbOperator {
     }
 
     private boolean JudgeNo(String Sno,String Snumber,String Sname,String Scity,int flag){
-        resultSet = GetResultSet(Sno,Snumber,Sname,Scity,flag);
+        resultSet = GetDResultSet(Sno,Snumber,Sname,Scity,flag);
         boolean volite = false;
         try {
             while(resultSet.next()){
@@ -132,7 +192,7 @@ public class DbOperator {
     }
 
     private boolean JudgeIfDelete(String Sno,String Snumber,String Sname,String Scity,int flag) {
-        resultSet = GetResultSet(Sno,Snumber,Sname,Scity,flag);
+        resultSet = GetDResultSet(Sno,Snumber,Sname,Scity,flag);
         boolean volite = false;
         try {
             while(resultSet.next()){

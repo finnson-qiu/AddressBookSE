@@ -5,16 +5,16 @@ import java.awt.*;
 
 public class StMainInterface {
 
-        JFrame jFrame;
+        private JFrame jFrame;
         private JTextArea textArea;
-        JTextField textField1;
-        JTextField textField2;
-        JTextField textField3;
-        JTextField textField4;
-        JButton button1;
-        JButton button2;
-        JButton button3;
-        JButton button4;
+        private JTextField textField1;
+        private JTextField textField2;
+        private JTextField textField3;
+        private JTextField textField4;
+        private JButton button1;
+        private JButton button2;
+        private JButton button3;
+        private JButton button4;
 
 
         public JFrame getjFrame() {

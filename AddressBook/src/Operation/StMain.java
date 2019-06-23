@@ -6,8 +6,6 @@ import Interface.StMainInterface;
 
 import javax.swing.*;
 
-import static java.lang.Thread.sleep;
-
 
 public class StMain {
     private static StMainInterface stMainInterface;
@@ -77,6 +75,22 @@ public class StMain {
         if(sno.isEmpty()||snumber.isEmpty()||sname.isEmpty()||scity.isEmpty()){
             errorInterface.CreateFrame();
             errorInterface.getjLabel().setText("需要填写所有信息");
+        }
+        else if(sno.length() != 9){
+            errorInterface.CreateFrame();
+            errorInterface.getjLabel().setText("学号长度为9");
+        }
+        else if(snumber.length()!=11){
+            errorInterface.CreateFrame();
+            errorInterface.getjLabel().setText("电话号码长度为11");
+        }
+        else if(sname.length() > 10){
+            errorInterface.CreateFrame();
+            errorInterface.getjLabel().setText("姓名长度不大于10");
+        }
+        else if(scity.length() > 10){
+            errorInterface.CreateFrame();
+            errorInterface.getjLabel().setText("家庭住址长度不大于10");
         }
         else {
             DbOperator db = new DbOperator();
